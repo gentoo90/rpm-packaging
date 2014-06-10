@@ -10,6 +10,8 @@ After all your spec files should be commited to this GitHub repo :)
 
 **Warining:** Note, that CentOS comes with [perl-5.10.1](http://isoredirect.centos.org/centos/6/os/x86_64/Packages/perl-5.10.1-136.el6.x86_64.rpm) and new package should be installed to `/opt/`.
 
+###Materials
+For reference: [perl-5.18.2-299.fc21.src.rpm](http://dl.fedoraproject.org/pub/fedora/linux/development/rawhide/source/SRPMS/p/perl-5.18.2-299.fc21.src.rpm) contains both sources and spec file to needed to build package. Could be passed directly to `rpmbuild` tool.
 ##Documentation
 
 ###RedHat Package Manager usage
