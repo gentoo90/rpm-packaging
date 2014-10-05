@@ -7,7 +7,7 @@
 %global parallel_tests 1
 %global tapsetdir   %{_datadir}/systemtap/tapset
 
-%global dual_life 0
+%global dual_life 1
 %global rebuild_from_scratch 0
 
 # This overrides filters from build root (/usr/lib/rpm/macros.d/macros.perl)
@@ -102,7 +102,7 @@ Patch201:       perl-5.16.3-Link-XS-modules-to-libperl.so-with-EU-MM-on-Linux.pa
 # Update some of the bundled modules
 # see http://fedoraproject.org/wiki/Perl/perl.spec for instructions
 
-BuildRequires:  groff, libdb-devel, tcsh, zlib-devel, bzip2-devel
+BuildRequires:  groff, db4-devel, tcsh, zlib-devel, bzip2-devel
 BuildRequires:  systemtap-sdt-devel
 %if %{with gdbm}
 BuildRequires: gdbm-devel
@@ -1441,7 +1441,7 @@ License:        GPL+ or Artistic
 Group:          Development/Libraries
 Version:        1.63
 # Pod::Usage execute perldoc from perl-Pod-Perldoc by default
-BuildRequires:  perl-Pod-Perldoc
+# BuildRequires:  perl-Pod-Perldoc
 Requires:       %perl_compat
 # Pod::Usage executes perldoc from perl-Pod-Perldoc by default
 Requires:       perl-Pod-Perldoc
