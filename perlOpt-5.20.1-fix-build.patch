@@ -1,0 +1,13 @@
+diff --git a/Makefile.SH b/Makefile.SH
+index 6e43217..f540251 100755
+--- a/Makefile.SH
++++ b/Makefile.SH
+@@ -141,7 +141,7 @@ true)
+ 	    # INSTALL file, under "Building a shared perl library".
+ 	    # If there is no pre-existing $libperl, we don't need
+ 	    # to do anything further.
+-	    if test -f $archlib/CORE/$libperl; then
++	    if true; then
+ 		rm -f preload
+ 		cat <<'EOT' > preload
+ #! /bin/sh

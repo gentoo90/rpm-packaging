@@ -7,6 +7,9 @@
 %global parallel_tests 1
 %global tapsetdir   %{_datadir}/systemtap/tapset
 
+%global _prefix /opt/perl-%{perl_version}
+%global _mandir %{_prefix}/man
+
 %global dual_life 1
 %global rebuild_from_scratch 0
 
@@ -92,6 +95,9 @@ Patch25:        perl-5.18.2-t-op-crypt.t-Perform-SHA-256-algorithm-if-default-on
 
 # Make *DBM_File desctructors thread-safe, bug #1107543, RT#61912
 Patch26:        perl-5.18.2-Destroy-GDBM-NDBM-ODBM-SDBM-_File-objects-only-from-.patch
+
+# Fix build with nonstandard prefix
+Patch40:        perlOpt-5.20.1-fix-build.patch
 
 # Link XS modules to libperl.so with EU::CBuilder on Linux, bug #960048
 Patch200:       perl-5.16.3-Link-XS-modules-to-libperl.so-with-EU-CBuilder-on-Li.patch
@@ -1827,6 +1833,7 @@ tarball from perl.org.
 %patch22 -p1
 %patch25 -p1
 %patch26 -p1
+%patch40 -p1
 %patch200 -p1
 %patch201 -p1
 
