@@ -6,9 +6,8 @@ echo I am provisioning...
 sudo echo "6.5" > /etc/yum/vars/full_releasever
 sudo mv /home/vagrant/srpm.repo /etc/yum.repos.d/
 sudo yum -y install http://mirror.omnilance.com/epel/6/i386/epel-release-6-8.noarch.rpm
-sudo yum install http://mirror.yandex.ru/fedora/russianfedora/russianfedora/free/el/releases/6/Everything/i386/os/puias-release-6-2.R.noarch.rpm
-sudo yum install http://mirror.yandex.ru/fedora/russianfedora/russianfedora/free/el/releases/6/Everything/i386/os/russianfedora-free-release-6-3.R.noarch.rpm
 sudo yum -y install bash-completion ccache createrepo mc redhat-rpm-config rpm-build rpmdevtools yum-utils
+sudo yum install http://swiftsignal.com/packages/centos/6/i386/the-silver-searcher-0.14-1.el6.i686.rpm
 sudo wget -P /etc/profile.d/ https://gist.githubusercontent.com/gentoo90/5999056/raw/5c957a93f92f61586a72768b360d8eb12f059304/colorprompt.sh
 SCRIPT
 
@@ -26,7 +25,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # config.vm.synced_folder ".", "/home/vagrant/rpmbuild/SPECS"
 
   config.vm.provider "virtualbox" do |vb|
-    vb.gui = true
+    vb.gui = false
     # vb.customize ["modifyvm", :id, "--memory", "1024"]
   end
 
