@@ -1,0 +1,6 @@
+[perlopt-media]
+name=Newest Perl installing into /opt folder
+baseurl=file:///vagrant/repo/
+        file:///media/repo/
+gpgcheck=0
+enabled=1

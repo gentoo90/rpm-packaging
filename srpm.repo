@@ -1,0 +1,16 @@
+[base-source]
+name=CentOS-$full_releasever - Base source
+baseurl=http://vault.centos.org/$full_releasever/os/Source/
+gpgcheck=1
+gpgkey=http://vault.centos.org/RPM-GPG-KEY-CentOS-6
+priority=1
+enabled=1
+
+
+[updates-source]
+name=CentOS-$full_releasever - Updates Source
+baseurl=http://vault.centos.org/$full_releasever/updates/Source/
+gpgcheck=1
+gpgkey=http://mirror.centos.org/centos/RPM-GPG-KEY-CentOS-6
+priority=1
+enabled=1
