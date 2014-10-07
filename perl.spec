@@ -13,10 +13,7 @@
 %global dual_life 1
 %global rebuild_from_scratch 0
 
-
-%global __perl_requires	/vagrant/perl.req
-%global __perl_provides	/vagrant/perl.prov
-
+%global _use_internal_dependency_generator 1
 
 # This overrides filters from build root (/usr/lib/rpm/macros.d/macros.perl)
 # intentionally (unversioned perl(DB) is removed and versioned one is kept).
@@ -57,6 +54,13 @@ Source3:        macros.perl
 # build requirement. Written by lberk; Not yet upstream.
 Source4:        perl.stp
 Source5:        perl-example.stp
+
+Source10:       perl.req
+Source11:       perl.prov
+Source12:       filter-requires.sh
+
+%global __perl_requires %{SOURCE12} '%{__requires_exclude}' %{SOURCE10}
+%global __perl_provides %{SOURCE12} '%{__provides_exclude}' %{SOURCE11}
 
 # Removes date check, Fedora/RHEL specific
 Patch1:         perl-perlbug-tag.patch
@@ -188,7 +192,6 @@ Requires(post): perlOpt-libs
 # Same as perl-libs. We need macros in basic buildroot, where Perl is only
 # because of git.
 Requires(post): perlOpt-macros
-
 
 %description
 Perl is a high-level programming language with roots in C, sed, awk and shell
@@ -367,7 +370,6 @@ Provides:       perlOpt(Carp::Heavy) = %{version}
 BuildArch:      noarch
 
 # Do not export unversioned module
-%global __provides_exclude %{?__provides_exclude:%__provides_exclude|}^perlOpt\\(Carp\\)\\s*$
 
 %description Carp
 The Carp routines are useful in your own modules because they act like
@@ -395,7 +397,7 @@ BuildArch:      noarch
 # Do not export private modules
 %global __provides_exclude %{__provides_exclude}|^perlOpt\\(Fh\\)\\s*$
 %global __provides_exclude %{__provides_exclude}|^perlOpt\\(MultipartBuffer\\)\\s*$
-%global __provides_exclude %{__provides_exclude}|^perlOpt\\(utf8\\)\\s*$
+%global __perl_provides %{SOURCE12} '%{__provides_exclude}' %{SOURCE11}
 
 %description CGI
 CGI.pm is a stable, complete and mature solution for processing and preparing
@@ -554,6 +556,7 @@ Requires:       %perl_compat
 BuildArch:      noarch
 # CPAN-Meta-Requirements used to have six decimal places
 %global __provides_exclude %{?__provides_exclude:%__provides_exclude|}^perlOpt\\(CPAN::Meta::Requirements\\)
+%global __perl_provides %{SOURCE12} '%{__provides_exclude}' %{SOURCE11}
 Provides:       perlOpt(CPAN::Meta::Requirements) = %{version}000
 
 %description CPAN-Meta-Requirements
@@ -833,6 +836,7 @@ BuildArch:      noarch
 # unfiltered on perl package, no need to reinject it.
 %global __provides_exclude %{?__provides_exclude:%__provides_exclude|}^perlOpt\\(DynaLoader\\)\\s*$
 %global __provides_exclude %__provides_exclude|^perlOpt\\(ExtUtils::MakeMaker::_version\\)
+%global __perl_provides %{SOURCE12} '%{__provides_exclude}' %{SOURCE11}
 
 %description ExtUtils-MakeMaker
 Create a module Makefile.
@@ -1119,6 +1123,8 @@ BuildArch:      noarch
 # Filter dependencies on private modules. Generator:
 # for F in $(find lib -type f); do perl -e '$/ = undef; $_ = <>; if (/^package #\R([\w:]*);/m) { print qq{|^perlOpt\\\\($1\\\\)} }' "$F"; done
 %global __requires_exclude %{?__requires_exclude:%__requires_exclude|}^perlOpt\\(Locale::Codes::Country_Retired\\)|^perlOpt\\(Locale::Codes::LangFam_Retired\\)|^perlOpt\\(Locale::Codes::Script_Retired\\)|^perlOpt\\(Locale::Codes::LangExt_Codes\\)|^perlOpt\\(Locale::Codes::LangFam_Codes\\)|^perlOpt\\(Locale::Codes::Script_Codes\\)|^perlOpt\\(Locale::Codes::Language_Codes\\)|^perlOpt\\(Locale::Codes::LangExt_Retired\\)|^perlOpt\\(Locale::Codes::Currency_Codes\\)|^perlOpt\\(Locale::Codes::LangVar_Retired\\)|^perlOpt\\(Locale::Codes::Language_Retired\\)|^perlOpt\\(Locale::Codes::Country_Codes\\)|^perlOpt\\(Locale::Codes::LangVar_Codes\\)|^perlOpt\\(Locale::Codes::Currency_Retired\\)
+%global __perl_requires %{SOURCE12} '%{__requires_exclude}' %{SOURCE10}
+%global __perl_provides %{SOURCE12} '%{__provides_exclude}' %{SOURCE11}
 
 %description Locale-Codes
 Locale-Codes is a distribution containing a set of modules. The modules
