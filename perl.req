@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-# RPM (and it's source code) is covered under two separate licenses. 
+# RPM (and it's source code) is covered under two separate licenses.
 
 # The entire code base may be distributed under the terms of the GNU
 # General Public License (GPL), which appears immediately below.
@@ -18,7 +18,7 @@
 # Erik Troan <ewt@redhat.com>.
 
 # a simple makedepends like script for perl.
- 
+
 # To save development time I do not parse the perl grammmar but
 # instead just lex it looking for what I want.  I take special care to
 # ignore comments and pod's.
@@ -44,10 +44,10 @@ if ("@ARGV") {
     process_file($_);
   }
 } else {
-  
+
   # notice we are passed a list of filenames NOT as common in unix the
   # contents of the file.
-  
+
   foreach (<>) {
     process_file($_);
   }
@@ -56,14 +56,14 @@ if ("@ARGV") {
 
 foreach $module (sort keys %require) {
   if (length($require{$module}) == 0) {
-    print "perl($module)\n";
+    print "perlOpt($module)\n";
   } else {
 
     # I am not using rpm3.0 so I do not want spaces arround my
     # operators. Also I will need to change the processing of the
     # $RPM_* vairable when I upgrage.
 
-    print "perl($module) >= $require{$module}\n";
+    print "perlOpt($module) >= $require{$module}\n";
   }
 }
 
@@ -72,14 +72,14 @@ exit 0;
 
 
 sub process_file {
-  
+
   my ($file) = @_;
   chomp $file;
-  
+
   open(FILE, "<$file") || return;
-  
+
   while (<FILE>) {
-    
+
     # skip the documentation
 
     # we should not need to have item in this if statement (it
@@ -93,7 +93,7 @@ sub process_file {
     if ( (m/^=(over)/) .. (m/^=(back)/) ) {
       next;
     }
-    
+
     # skip the data section
     if (m/^__(DATA|END)__$/) {
       last;
@@ -102,14 +102,14 @@ sub process_file {
     # Each keyword can appear multiple times.  Don't
     #  bother with datastructures to store these strings,
     #  if we need to print it print it now.
-    
+
     if ( m/^\s*\$RPM_Requires\s*=\s*["'](.*)['"]/i) {
       foreach $_ (split(/\s+/, $1)) {
 	print "$_\n";
       }
     }
 
-    if ( 
+    if (
 
 # ouch could be in a eval, perhaps we do not want these since we catch
 # an exception they must not be required
@@ -139,7 +139,7 @@ sub process_file {
       # if there is some interpolation of variables just skip this
       # dependency, we do not want
       #        do "$ENV{LOGDIR}/$rcfile";
-   
+
       ($module =~ m/\$/) && next;
 
       # skip if the phrase was "use of" -- shows up in gimp-perl, et al
@@ -171,7 +171,7 @@ sub process_file {
 
       $module =~ s/\.pm$//;
 
-      # some perl programmers write 'require URI/URL;' when 
+      # some perl programmers write 'require URI/URL;' when
       # they mean 'require URI::URL;'
 
       $module =~ s/\//::/;
@@ -186,11 +186,11 @@ sub process_file {
       # to mean that a particular version of perl is specified
 
       if ($module =~ /5.00/) {
-        print "perl >= 0:$module\n";
+        print "perlOpt >= 0:$module\n";
         next;
       }
       else {
-        print "perl >= 1:$module\n";
+        print "perlOpt >= 1:$module\n";
         next;
       }
 
@@ -198,10 +198,10 @@ sub process_file {
 
       # ph files do not use the package name inside the file.
       # perlmodlib  documentation says:
-      
+
       #       the .ph files made by h2ph will probably end up as
       #       extension modules made by h2xs.
-      
+
       # so do not expend much effort on these.
 
 
@@ -214,11 +214,11 @@ sub process_file {
       $require{$module}=$version;
       $line{$module}=$_;
     }
-    
+
   }
 
   close(FILE) ||
     die("$0: Could not close file: '$file' : $!\n");
-  
-  return ; 
+
+  return ;
 }

@@ -13,15 +13,20 @@
 %global dual_life 1
 %global rebuild_from_scratch 0
 
+
+%global __perl_requires	/vagrant/perl.req
+%global __perl_provides	/vagrant/perl.prov
+
+
 # This overrides filters from build root (/usr/lib/rpm/macros.d/macros.perl)
 # intentionally (unversioned perl(DB) is removed and versioned one is kept).
 # Filter provides from *.pl files, bug #924938
 %global __provides_exclude_from .*%{_docdir}|.*%{perl_archlib}/.*\\.pl$|.*%{perl_privlib}/.*\\.pl$
 %global __requires_exclude_from %{_docdir}
-%global __provides_exclude perl\\((VMS|Win32|BSD::|DB\\)$)
+%global __provides_exclude perlOpt\\((VMS|Win32|BSD::|DB\\)$)
 # unicore::Name - it's needed by perl, maybe problem of rpm
 # FCGI is external dependency after install of perl-CGI, remove it during RC releases
-%global __requires_exclude perl\\((VMS|BSD::|Win32|Tk|Mac::|Your::Module::Here|unicore::Name|FCGI)
+%global __requires_exclude perlOpt\\((VMS|BSD::|Win32|Tk|Mac::|Your::Module::Here|unicore::Name|FCGI)
 # same as we provide in /usr/lib/rpm/macros.d/macros.perl
 %global perl5_testdir   %{_libexecdir}/perl5-tests
 
@@ -30,7 +35,7 @@
 # We can skip %%check phase
 %bcond_without test
 
-Name:           perl
+Name:           perlOpt
 Version:        %{perl_version}
 # release number must be even higher, because dual-lived modules will be broken otherwise
 Release:        309%{?dist}
@@ -121,68 +126,68 @@ BuildRequires:  procps, rsyslog
 
 
 # compat macro needed for rebuild
-%global perl_compat perl(:MODULE_COMPAT_5.20.1)
+%global perl_compat perlOpt(:MODULE_COMPAT_5.20.1)
 
 # Compat provides
 Provides: %perl_compat
-Provides: perl(:MODULE_COMPAT_5.20.0)
+Provides: perlOpt(:MODULE_COMPAT_5.20.0)
 
 # Threading provides
-Provides: perl(:WITH_ITHREADS)
-Provides: perl(:WITH_THREADS)
+Provides: perlOpt(:WITH_ITHREADS)
+Provides: perlOpt(:WITH_THREADS)
 # Largefile provides
-Provides: perl(:WITH_LARGEFILES)
+Provides: perlOpt(:WITH_LARGEFILES)
 # PerlIO provides
-Provides: perl(:WITH_PERLIO)
+Provides: perlOpt(:WITH_PERLIO)
 # File provides
-Provides: perl(abbrev.pl)
-Provides: perl(assert.pl)
-Provides: perl(bigfloat.pl)
-Provides: perl(bigint.pl)
-Provides: perl(bigrat.pl)
-Provides: perl(bytes_heavy.pl)
-Provides: perl(cacheout.pl)
-Provides: perl(complete.pl)
-Provides: perl(ctime.pl)
-Provides: perl(dotsh.pl)
-Provides: perl(dumpvar.pl)
-Provides: perl(exceptions.pl)
-Provides: perl(fastcwd.pl)
-Provides: perl(find.pl)
-Provides: perl(finddepth.pl)
-Provides: perl(flush.pl)
-Provides: perl(ftp.pl)
-Provides: perl(getcwd.pl)
-Provides: perl(getopt.pl)
-Provides: perl(getopts.pl)
-Provides: perl(hostname.pl)
-Provides: perl(importenv.pl)
-Provides: perl(look.pl)
-Provides: perl(newgetopt.pl)
-Provides: perl(open2.pl)
-Provides: perl(open3.pl)
-Provides: perl(perl5db.pl)
-Provides: perl(pwd.pl)
-Provides: perl(shellwords.pl)
-Provides: perl(stat.pl)
-Provides: perl(syslog.pl)
-Provides: perl(tainted.pl)
-Provides: perl(termcap.pl)
-Provides: perl(timelocal.pl)
-Provides: perl(utf8_heavy.pl)
-Provides: perl(validate.pl)
+Provides: perlOpt(abbrev.pl)
+Provides: perlOpt(assert.pl)
+Provides: perlOpt(bigfloat.pl)
+Provides: perlOpt(bigint.pl)
+Provides: perlOpt(bigrat.pl)
+Provides: perlOpt(bytes_heavy.pl)
+Provides: perlOpt(cacheout.pl)
+Provides: perlOpt(complete.pl)
+Provides: perlOpt(ctime.pl)
+Provides: perlOpt(dotsh.pl)
+Provides: perlOpt(dumpvar.pl)
+Provides: perlOpt(exceptions.pl)
+Provides: perlOpt(fastcwd.pl)
+Provides: perlOpt(find.pl)
+Provides: perlOpt(finddepth.pl)
+Provides: perlOpt(flush.pl)
+Provides: perlOpt(ftp.pl)
+Provides: perlOpt(getcwd.pl)
+Provides: perlOpt(getopt.pl)
+Provides: perlOpt(getopts.pl)
+Provides: perlOpt(hostname.pl)
+Provides: perlOpt(importenv.pl)
+Provides: perlOpt(look.pl)
+Provides: perlOpt(newgetopt.pl)
+Provides: perlOpt(open2.pl)
+Provides: perlOpt(open3.pl)
+Provides: perlOpt(perl5db.pl)
+Provides: perlOpt(pwd.pl)
+Provides: perlOpt(shellwords.pl)
+Provides: perlOpt(stat.pl)
+Provides: perlOpt(syslog.pl)
+Provides: perlOpt(tainted.pl)
+Provides: perlOpt(termcap.pl)
+Provides: perlOpt(timelocal.pl)
+Provides: perlOpt(utf8_heavy.pl)
+Provides: perlOpt(validate.pl)
 
 # suidperl isn't created by upstream since 5.12.0
-Obsoletes: perl-suidperl <= 4:5.12.2
+Obsoletes: perlOpt-suidperl <= 4:5.12.2
 
-Requires: perl-libs = %{perl_epoch}:%{perl_version}-%{release}
+Requires: perlOpt-libs = %{perl_epoch}:%{perl_version}-%{release}
 
 # We need this to break the dependency loop, and ensure that perl-libs
 # gets installed before perl.
-Requires(post): perl-libs
+Requires(post): perlOpt-libs
 # Same as perl-libs. We need macros in basic buildroot, where Perl is only
 # because of git.
-Requires(post): perl-macros
+Requires(post): perlOpt-macros
 
 
 %description
@@ -213,13 +218,13 @@ Summary:        Header #files for use in perl development
 Group:          Development/Languages
 License:        GPL+ or Artistic
 # Require $Config{libs} providers, bug #905482
-Requires:       libdb-devel
+Requires:       db4-devel
 %if %{with gdbm}
 Requires:       gdbm-devel
 %endif
 Requires:       glibc-devel
 Requires:       systemtap-sdt-devel
-Requires:       perl(ExtUtils::ParseXS)
+Requires:       perlOpt(ExtUtils::ParseXS)
 Requires:       %perl_compat
 
 %description devel
@@ -247,7 +252,7 @@ License:        GPL+ or Artistic
 AutoReqProv:    0
 Requires:       %perl_compat
 # FIXME - note this will need to change when doing the core/minimal swizzle
-Requires:       perl-core
+Requires:       perlOpt-core
 
 %description tests
 This package contains the test suite included with Perl %{perl_version}.
@@ -263,7 +268,7 @@ Group:          Development/Tools
 License:        GPL+ or Artistic
 Epoch:          0
 Version:        1.000
-Conflicts:      perl < 4:5.18.2-300
+Conflicts:      perlOpt < 4:5.18.2-300
 
 %description App-a2p
 This package delivers a2p tool which takes an awk script specified on the
@@ -280,7 +285,7 @@ Epoch:          0
 Version:        0.001
 BuildArch:      noarch
 Requires:       %perl_compat
-Conflicts:      perl < 4:5.18.2-300
+Conflicts:      perlOpt < 4:5.18.2-300
 
 %description App-find2perl
 This package delivers find2perl tool which is a little translator to convert
@@ -296,7 +301,7 @@ License:        (GPL+ or Artistic) and App-s2p
 Epoch:          0
 Version:        1.000
 BuildArch:      noarch
-Conflicts:      perl < 4:5.18.2-300
+Conflicts:      perlOpt < 4:5.18.2-300
 
 %description App-s2p
 This package delivers s2p tool which converts sed scripts to Perl programs.
@@ -313,7 +318,7 @@ License:        GPL+ or Artistic
 Epoch:          0
 Version:        1.96
 Requires:       %perl_compat
-Requires:       perl(Compress::Zlib), perl(IO::Zlib)
+Requires:       perlOpt(Compress::Zlib), perlOpt(IO::Zlib)
 BuildArch:      noarch
 
 %description Archive-Tar
@@ -333,11 +338,11 @@ Epoch:          0
 Version:        2.23
 Requires:       %perl_compat
 BuildArch:      noarch
-Requires:       perl(B)
-Requires:       perl(Fcntl)
-Requires:       perl(overload)
-Requires:       perl(POSIX)
-Conflicts:      perl < 4:5.16.2-259
+Requires:       perlOpt(B)
+Requires:       perlOpt(Fcntl)
+Requires:       perlOpt(overload)
+Requires:       perlOpt(POSIX)
+Conflicts:      perlOpt < 4:5.16.2-259
 
 %description autodie
 The "autodie" and "Fatal" pragma provides a convenient way to replace
@@ -358,11 +363,11 @@ Version:        1.33.01
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Requires:       %perl_compat
-Provides:       perl(Carp::Heavy) = %{version}
+Provides:       perlOpt(Carp::Heavy) = %{version}
 BuildArch:      noarch
 
 # Do not export unversioned module
-%global __provides_exclude %{?__provides_exclude:%__provides_exclude|}^perl\\(Carp\\)\\s*$
+%global __provides_exclude %{?__provides_exclude:%__provides_exclude|}^perlOpt\\(Carp\\)\\s*$
 
 %description Carp
 The Carp routines are useful in your own modules because they act like
@@ -382,15 +387,15 @@ License:        GPL+ or Artistic
 Epoch:          0
 Version:        3.63
 Requires:       %perl_compat
-Provides:       perl(CGI) = %{version}
+Provides:       perlOpt(CGI) = %{version}
 BuildArch:      noarch
 
 # Do not export unversioned module
-%global __provides_exclude %{?__provides_exclude:%__provides_exclude|}^perl\\(CGI\\)\\s*$
+%global __provides_exclude %{?__provides_exclude:%__provides_exclude|}^perlOpt\\(CGI\\)\\s*$
 # Do not export private modules
-%global __provides_exclude %{__provides_exclude}|^perl\\(Fh\\)\\s*$
-%global __provides_exclude %{__provides_exclude}|^perl\\(MultipartBuffer\\)\\s*$
-%global __provides_exclude %{__provides_exclude}|^perl\\(utf8\\)\\s*$
+%global __provides_exclude %{__provides_exclude}|^perlOpt\\(Fh\\)\\s*$
+%global __provides_exclude %{__provides_exclude}|^perlOpt\\(MultipartBuffer\\)\\s*$
+%global __provides_exclude %{__provides_exclude}|^perlOpt\\(utf8\\)\\s*$
 
 %description CGI
 CGI.pm is a stable, complete and mature solution for processing and preparing
@@ -410,7 +415,7 @@ Group:          Development/Libraries
 License:        GPL+ or Artistic
 Epoch:          0
 Version:        2.064
-Requires:       perl(Exporter), perl(File::Temp)
+Requires:       perlOpt(Exporter), perlOpt(File::Temp)
 
 %description Compress-Raw-Bzip2
 This module provides a Perl interface to the bzip2 compression library.
@@ -437,9 +442,9 @@ License:        GPL+ or Artistic
 Epoch:          0
 Version:        1.31
 Requires:       %perl_compat
-Requires:       perl(Carp)
+Requires:       perlOpt(Carp)
 BuildArch:      noarch
-Conflicts:      perl < 4:5.16.3-264
+Conflicts:      perlOpt < 4:5.16.3-264
 
 %description constant
 This pragma allows you to declare constants at compile-time:
@@ -467,47 +472,47 @@ License:        GPL+ or Artistic
 Epoch:          0
 Version:        2.05
 # Prefer Archive::Tar and Compress::Zlib over tar and gzip
-Requires:       perl(Archive::Tar) >= 1.50
-Requires:       perl(base)
-Requires:       perl(Data::Dumper)
+Requires:       perlOpt(Archive::Tar) >= 1.50
+Requires:       perlOpt(base)
+Requires:       perlOpt(Data::Dumper)
 %if !%{defined perl_bootstrap}
-Requires:       perl(Devel::Size)
+Requires:       perlOpt(Devel::Size)
 %endif
-Requires:       perl(ExtUtils::Manifest)
+Requires:       perlOpt(ExtUtils::Manifest)
 %if !%{defined perl_bootstrap}
-Requires:       perl(File::HomeDir) >= 0.65
+Requires:       perlOpt(File::HomeDir) >= 0.65
 %endif
-Requires:       perl(File::Temp) >= 0.16
-Requires:       perl(lib)
-Requires:       perl(Net::Config)
-Requires:       perl(Net::FTP)
-Requires:       perl(POSIX)
-Requires:       perl(Term::ReadLine)
+Requires:       perlOpt(File::Temp) >= 0.16
+Requires:       perlOpt(lib)
+Requires:       perlOpt(Net::Config)
+Requires:       perlOpt(Net::FTP)
+Requires:       perlOpt(POSIX)
+Requires:       perlOpt(Term::ReadLine)
 %if !%{defined perl_bootstrap}
-Requires:       perl(URI)
-Requires:       perl(URI::Escape)
+Requires:       perlOpt(URI)
+Requires:       perlOpt(URI::Escape)
 %endif
-Requires:       perl(User::pwent)
+Requires:       perlOpt(User::pwent)
 # Optional but higly recommended:
 %if !%{defined perl_bootstrap}
-Requires:       perl(Archive::Zip)
-Requires:       perl(Compress::Bzip2)
-Requires:       perl(CPAN::Meta) >= 2.110350
+Requires:       perlOpt(Archive::Zip)
+Requires:       perlOpt(Compress::Bzip2)
+Requires:       perlOpt(CPAN::Meta) >= 2.110350
 %endif
-Requires:       perl(Compress::Zlib)
-Requires:       perl(Digest::MD5)
+Requires:       perlOpt(Compress::Zlib)
+Requires:       perlOpt(Digest::MD5)
 # CPAN encourages Digest::SHA strongly because of integrity checks
-Requires:       perl(Digest::SHA)
-Requires:       perl(Dumpvalue)
-Requires:       perl(ExtUtils::CBuilder)
+Requires:       perlOpt(Digest::SHA)
+Requires:       perlOpt(Dumpvalue)
+Requires:       perlOpt(ExtUtils::CBuilder)
 %if ! %{defined perl_bootstrap}
 # Avoid circular deps local::lib -> Module::Install -> CPAN when bootstraping
 # local::lib recommended by CPAN::FirstTime default choice, bug #1122498
-Requires:       perl(local::lib)
+Requires:       perlOpt(local::lib)
 %endif
-Requires:       perl(Module::Build)
+Requires:       perlOpt(Module::Build)
 %if ! %{defined perl_bootstrap}
-Requires:       perl(Text::Glob)
+Requires:       perlOpt(Text::Glob)
 %endif
 Requires:       %perl_compat
 Provides:       cpan = %{version}
@@ -548,8 +553,8 @@ Group:          Development/Libraries
 Requires:       %perl_compat
 BuildArch:      noarch
 # CPAN-Meta-Requirements used to have six decimal places
-%global __provides_exclude %{?__provides_exclude:%__provides_exclude|}^perl\\(CPAN::Meta::Requirements\\)
-Provides:       perl(CPAN::Meta::Requirements) = %{version}000
+%global __provides_exclude %{?__provides_exclude:%__provides_exclude|}^perlOpt\\(CPAN::Meta::Requirements\\)
+Provides:       perlOpt(CPAN::Meta::Requirements) = %{version}000
 
 %description CPAN-Meta-Requirements
 A CPAN::Meta::Requirements object models a set of version constraints like
@@ -583,8 +588,8 @@ License:        GPL+ or Artistic
 Epoch:          0
 Version:        2.151
 Requires:       %perl_compat
-Requires:       perl(Scalar::Util)
-Requires:       perl(XSLoader)
+Requires:       perlOpt(Scalar::Util)
+Requires:       perlOpt(XSLoader)
 
 %description Data-Dumper
 Given a list of scalars or reference variables, writes out their contents
@@ -601,9 +606,9 @@ License:        GPL+ or Artistic
 Epoch:          0
 Version:        1.831
 Requires:       %perl_compat
-Requires:       perl(Fcntl)
-Requires:       perl(XSLoader)
-Conflicts:      perl < 4:5.16.3-264
+Requires:       perlOpt(Fcntl)
+Requires:       perlOpt(XSLoader)
+Conflicts:      perlOpt < 4:5.16.3-264
 
 %description DB_File
 DB_File is a module which allows Perl programs to make use of the facilities
@@ -622,7 +627,7 @@ Epoch:          0
 Version:        1.17
 BuildArch:      noarch
 Requires:       %perl_compat
-Requires:       perl(MIME::Base64)
+Requires:       perlOpt(MIME::Base64)
 
 %description Digest
 The Digest:: modules calculate digests, also called "fingerprints" or
@@ -641,9 +646,9 @@ License:        GPL+ or Artistic
 Epoch:          0
 Version:        2.53
 Requires:       %perl_compat
-Requires:       perl(XSLoader)
+Requires:       perlOpt(XSLoader)
 # Recommended
-Requires:       perl(Digest::base) >= 1.00
+Requires:       perlOpt(Digest::base) >= 1.00
 
 %description Digest-MD5
 The Digest::MD5 module allows you to use the RSA Data Security Inc. MD5
@@ -662,8 +667,8 @@ Epoch:          1
 Version:        5.88
 Requires:       %perl_compat
 # Recommended
-Requires:       perl(Digest::base)
-Requires:       perl(MIME::Base64)
+Requires:       perlOpt(Digest::base)
+Requires:       perlOpt(MIME::Base64)
 
 %description Digest-SHA
 Digest::SHA is a complete implementation of the NIST Secure Hash
@@ -680,7 +685,7 @@ License:        GPL+ or Artistic
 Epoch:          2
 Version:        2.60
 Requires:       %perl_compat
-Conflicts:      perl < 4:5.16.2-256
+Conflicts:      perlOpt < 4:5.16.2-256
 
 %description Encode
 The Encode module provides the interface between Perl strings and the rest
@@ -694,7 +699,7 @@ Epoch:          2
 Version:        2.60
 Requires:       %perl_compat
 Requires:       %{name}-Encode = %{epoch}:%{version}-%{release}
-Requires:       perl-devel
+Requires:       perlOpt-devel
 BuildArch:      noarch
 
 %description Encode-devel
@@ -712,7 +717,7 @@ Epoch:          0
 Version:        1.04
 Requires:       %perl_compat
 BuildArch:      noarch
-Conflicts:      perl < 4:5.16.2-265
+Conflicts:      perlOpt < 4:5.16.2-265
 
 %description Env
 Perl maintains environment variables in a special hash named %%ENV. For when
@@ -729,7 +734,7 @@ Epoch:          0
 Version:        0.007
 Requires:       %perl_compat
 BuildArch:      noarch
-Conflicts:      perl < 4:5.20.0-303
+Conflicts:      perlOpt < 4:5.20.0-303
 
 %description experimental
 This pragma provides an easy and convenient way to enable or disable
@@ -744,9 +749,9 @@ License:        GPL+ or Artistic
 Epoch:          0
 Version:        5.71
 Requires:       %perl_compat
-Requires:       perl(Carp) >= 1.05
+Requires:       perlOpt(Carp) >= 1.05
 BuildArch:      noarch
-Conflicts:      perl < 4:5.16.2-265
+Conflicts:      perlOpt < 4:5.16.2-265
 
 %description Exporter
 The Exporter module implements an import method which allows a module to
@@ -764,7 +769,7 @@ License:        GPL+ or Artistic
 Epoch:          1
 # real version 0.280217 https://fedoraproject.org/wiki/Perl/Tips#Dot_approach
 Version:        0.28.2.17
-Requires:       perl-devel
+Requires:       perlOpt-devel
 Requires:       %perl_compat
 BuildArch:      noarch
 
@@ -780,7 +785,7 @@ Group:          Development/Languages
 License:        GPL+ or Artistic
 Epoch:          0
 Version:        1.32
-Requires:       perl-devel
+Requires:       perlOpt-devel
 Requires:       %perl_compat
 BuildArch:      noarch
 
@@ -794,7 +799,7 @@ Group:          Development/Languages
 License:        GPL+ or Artistic
 Epoch:          0
 Version:        1.67
-Requires:       perl-devel
+Requires:       perlOpt-devel
 Requires:       %perl_compat
 BuildArch:      noarch
 
@@ -809,25 +814,25 @@ Group:          Development/Languages
 License:        GPL+ or Artistic
 Epoch:          0
 Version:        6.98
-Requires:       perl-devel
+Requires:       perlOpt-devel
 Requires:       %perl_compat
-Requires:       perl(Data::Dumper)
-Requires:       perl(DynaLoader)
-Requires:       perl(ExtUtils::Command)
-Requires:       perl(ExtUtils::Install)
-Requires:       perl(ExtUtils::Manifest)
-Requires:       perl(File::Find)
-Requires:       perl(Getopt::Long)
+Requires:       perlOpt(Data::Dumper)
+Requires:       perlOpt(DynaLoader)
+Requires:       perlOpt(ExtUtils::Command)
+Requires:       perlOpt(ExtUtils::Install)
+Requires:       perlOpt(ExtUtils::Manifest)
+Requires:       perlOpt(File::Find)
+Requires:       perlOpt(Getopt::Long)
 # Optional Pod::Man is needed for generating manual pages from POD
-Requires:       perl(Pod::Man)
-Requires:       perl(POSIX)
-Requires:       perl(Test::Harness)
+Requires:       perlOpt(Pod::Man)
+Requires:       perlOpt(POSIX)
+Requires:       perlOpt(Test::Harness)
 BuildArch:      noarch
 
 # Filter false DynaLoader provides. Versioned perl(DynaLoader) keeps
 # unfiltered on perl package, no need to reinject it.
-%global __provides_exclude %{?__provides_exclude:%__provides_exclude|}^perl\\(DynaLoader\\)\\s*$
-%global __provides_exclude %__provides_exclude|^perl\\(ExtUtils::MakeMaker::_version\\)
+%global __provides_exclude %{?__provides_exclude:%__provides_exclude|}^perlOpt\\(DynaLoader\\)\\s*$
+%global __provides_exclude %__provides_exclude|^perlOpt\\(ExtUtils::MakeMaker::_version\\)
 
 %description ExtUtils-MakeMaker
 Create a module Makefile.
@@ -840,9 +845,9 @@ Group:          Development/Languages
 License:        GPL+ or Artistic
 Epoch:          0
 Version:        1.63
-Requires:       perl-devel
+Requires:       perlOpt-devel
 Requires:       %perl_compat
-Requires:       perl(File::Path)
+Requires:       perlOpt(File::Path)
 BuildArch:      noarch
 
 %description ExtUtils-Manifest
@@ -855,7 +860,7 @@ Group:          Development/Languages
 License:        GPL+ or Artistic
 Epoch:          0
 Version:        1.01
-Requires:       perl-devel
+Requires:       perlOpt-devel
 Requires:       %perl_compat
 BuildArch:      noarch
 
@@ -877,10 +882,10 @@ License:        GPL+ or Artistic
 # Epoch bump for clean upgrade over old standalone package
 Epoch:          1
 Version:        3.24
-Requires:       perl-devel
+Requires:       perlOpt-devel
 Requires:       %perl_compat
 BuildArch:      noarch
-Obsoletes:      perl-ExtUtils-Typemaps
+Obsoletes:      perlOpt-ExtUtils-Typemaps
 
 %description ExtUtils-ParseXS
 ExtUtils::ParseXS will compile XS code into C code by embedding the constructs
@@ -896,9 +901,9 @@ Group:          Development/Libraries
 License:        GPL+ or Artistic
 Epoch:          0
 Version:        0.48
-Requires:       perl(IPC::Cmd) >= 0.36
-Requires:       perl(Module::Load::Conditional) >= 0.04
-Requires:       perl(Params::Check) >= 0.07
+Requires:       perlOpt(IPC::Cmd) >= 0.36
+Requires:       perlOpt(Module::Load::Conditional) >= 0.04
+Requires:       perlOpt(Params::Check) >= 0.07
 Requires:       %perl_compat
 BuildArch:      noarch
 
@@ -914,9 +919,9 @@ License:        GPL+ or Artistic
 Epoch:          0
 Version:        2.09
 Requires:       %perl_compat
-Requires:       perl(Carp)
+Requires:       perlOpt(Carp)
 BuildArch:      noarch
-Conflicts:      perl < 4:5.16.2-265
+Conflicts:      perlOpt < 4:5.16.2-265
 
 %description File-Path
 This module provides a convenient way to create directories of arbitrary
@@ -933,9 +938,9 @@ Epoch:          0
 Version:        0.23.04
 Requires:       %perl_compat
 BuildArch:      noarch
-Requires:       perl(File::Path) >= 2.06
-Requires:       perl(POSIX)
-Conflicts:      perl < 4:5.16.2-265
+Requires:       perlOpt(File::Path) >= 2.06
+Requires:       perlOpt(POSIX)
+Conflicts:      perlOpt < 4:5.16.2-265
 
 %description File-Temp
 File::Temp can be used to create and open temporary files in a safe way.
@@ -969,12 +974,12 @@ License:        GPLv2+ or Artistic
 Epoch:          0
 Version:        2.42
 Requires:       %perl_compat
-Requires:       perl(overload)
-Requires:       perl(Text::ParseWords)
+Requires:       perlOpt(overload)
+Requires:       perlOpt(Text::ParseWords)
 # Recommended:
-Requires:       perl(Pod::Usage) >= 1.14
+Requires:       perlOpt(Pod::Usage) >= 1.14
 BuildArch:      noarch
-Conflicts:      perl < 4:5.16.3-268
+Conflicts:      perlOpt < 4:5.16.3-268
 
 %description Getopt-Long
 The Getopt::Long module implements an extended getopt function called
@@ -995,8 +1000,8 @@ License:        GPL+ or Artistic
 Epoch:          0
 Version:        2.064
 Requires:       %perl_compat
-Obsoletes:      perl-Compress-Zlib <= 2.020
-Provides:       perl(IO::Uncompress::Bunzip2)
+Obsoletes:      perlOpt-Compress-Zlib <= 2.020
+Provides:       perlOpt(IO::Uncompress::Bunzip2)
 BuildArch:      noarch
 
 %description IO-Compress
@@ -1014,7 +1019,7 @@ Epoch:          0
 Version:        0.29
 Requires:       %perl_compat
 BuildArch:      noarch
-Conflicts:      perl < 4:5.20.0-303
+Conflicts:      perlOpt < 4:5.20.0-303
 
 %description IO-Socket-IP
 This module provides a protocol-independent way to use IPv4 and IPv6
@@ -1029,7 +1034,7 @@ License:        GPL+ or Artistic
 # Epoch bump for clean upgrade over old standalone package
 Epoch:          1
 Version:        1.10
-Requires:       perl(Compress::Zlib)
+Requires:       perlOpt(Compress::Zlib)
 Requires:       %perl_compat
 BuildArch:      noarch
 
@@ -1048,7 +1053,7 @@ License:        GPL+ or Artistic
 # Epoch bump for clean upgrade over old standalone package
 Epoch:          1
 Version:        0.92
-Requires:       perl(ExtUtils::MakeMaker)
+Requires:       perlOpt(ExtUtils::MakeMaker)
 Requires:       %perl_compat
 BuildArch:      noarch
 
@@ -1065,10 +1070,10 @@ Group:          Development/Libraries
 License:        GPL+ or Artistic
 Epoch:          0
 Version:        0.043
-Requires:       perl(bytes)
-Requires:       perl(Carp)
-Requires:       perl(IO::Socket)
-Requires:       perl(Time::Local)
+Requires:       perlOpt(bytes)
+Requires:       perlOpt(Carp)
+Requires:       perlOpt(IO::Socket)
+Requires:       perlOpt(Time::Local)
 BuildArch:      noarch
 
 %description HTTP-Tiny
@@ -1104,16 +1109,16 @@ Version:        3.25
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Requires:       %perl_compat
-Requires:       perl(constant)
-Provides:       perl(Locale::Codes) = %{version}
+Requires:       perlOpt(constant)
+Provides:       perlOpt(Locale::Codes) = %{version}
 BuildArch:      noarch
 
 # Do not export unversioned module
-%global __provides_exclude %{?__provides_exclude:%__provides_exclude|}^perl\\(Locale::Codes\\)\\s*$
+%global __provides_exclude %{?__provides_exclude:%__provides_exclude|}^perlOpt\\(Locale::Codes\\)\\s*$
 
 # Filter dependencies on private modules. Generator:
-# for F in $(find lib -type f); do perl -e '$/ = undef; $_ = <>; if (/^package #\R([\w:]*);/m) { print qq{|^perl\\\\($1\\\\)} }' "$F"; done
-%global __requires_exclude %{?__requires_exclude:%__requires_exclude|}^perl\\(Locale::Codes::Country_Retired\\)|^perl\\(Locale::Codes::LangFam_Retired\\)|^perl\\(Locale::Codes::Script_Retired\\)|^perl\\(Locale::Codes::LangExt_Codes\\)|^perl\\(Locale::Codes::LangFam_Codes\\)|^perl\\(Locale::Codes::Script_Codes\\)|^perl\\(Locale::Codes::Language_Codes\\)|^perl\\(Locale::Codes::LangExt_Retired\\)|^perl\\(Locale::Codes::Currency_Codes\\)|^perl\\(Locale::Codes::LangVar_Retired\\)|^perl\\(Locale::Codes::Language_Retired\\)|^perl\\(Locale::Codes::Country_Codes\\)|^perl\\(Locale::Codes::LangVar_Codes\\)|^perl\\(Locale::Codes::Currency_Retired\\)
+# for F in $(find lib -type f); do perl -e '$/ = undef; $_ = <>; if (/^package #\R([\w:]*);/m) { print qq{|^perlOpt\\\\($1\\\\)} }' "$F"; done
+%global __requires_exclude %{?__requires_exclude:%__requires_exclude|}^perlOpt\\(Locale::Codes::Country_Retired\\)|^perlOpt\\(Locale::Codes::LangFam_Retired\\)|^perlOpt\\(Locale::Codes::Script_Retired\\)|^perlOpt\\(Locale::Codes::LangExt_Codes\\)|^perlOpt\\(Locale::Codes::LangFam_Codes\\)|^perlOpt\\(Locale::Codes::Script_Codes\\)|^perlOpt\\(Locale::Codes::Language_Codes\\)|^perlOpt\\(Locale::Codes::LangExt_Retired\\)|^perlOpt\\(Locale::Codes::Currency_Codes\\)|^perlOpt\\(Locale::Codes::LangVar_Retired\\)|^perlOpt\\(Locale::Codes::Language_Retired\\)|^perlOpt\\(Locale::Codes::Country_Codes\\)|^perlOpt\\(Locale::Codes::LangVar_Codes\\)|^perlOpt\\(Locale::Codes::Currency_Retired\\)
 
 %description Locale-Codes
 Locale-Codes is a distribution containing a set of modules. The modules
@@ -1130,7 +1135,7 @@ Epoch:          0
 Version:        1.25
 Requires:       %perl_compat
 BuildArch:      noarch
-Conflicts:      perl < 4:5.16.3-268
+Conflicts:      perlOpt < 4:5.16.3-268
 
 %description Locale-Maketext
 It is a common feature of applications (whether run directly, or via the Web)
@@ -1167,16 +1172,16 @@ License:        GPL+ or Artistic
 Epoch:          2
 # real version 0.4205
 Version:        0.42.05
-Requires:       perl(Archive::Tar) >= 1.08
-Requires:       perl(CPAN::Meta) >= 2.110420
-Requires:       perl(ExtUtils::CBuilder) >= 0.15
-Requires:       perl(ExtUtils::ParseXS) >= 1.02
-Requires:       perl-devel
+Requires:       perlOpt(Archive::Tar) >= 1.08
+Requires:       perlOpt(CPAN::Meta) >= 2.110420
+Requires:       perlOpt(ExtUtils::CBuilder) >= 0.15
+Requires:       perlOpt(ExtUtils::ParseXS) >= 1.02
+Requires:       perlOpt-devel
 Requires:       %perl_compat
 # Optional run-time needed for generating documentation from POD:
-Requires:       perl(Pod::Html)
-Requires:       perl(Pod::Man)
-Requires:       perl(Pod::Text)
+Requires:       perlOpt(Pod::Html)
+Requires:       perlOpt(Pod::Man)
+Requires:       perlOpt(Pod::Text)
 BuildArch:      noarch
 
 %description Module-Build
@@ -1198,7 +1203,7 @@ License:        GPL+ or Artistic
 Epoch:          1
 Version:        5.020001
 Requires:       %perl_compat
-Requires:       perl(version)
+Requires:       perlOpt(version)
 BuildArch:      noarch
 
 %description Module-CoreList
@@ -1298,7 +1303,7 @@ License:        (GPL+ or Artistic) and BSD
 Epoch:          0
 Version:        3.48
 Requires:       %perl_compat
-Requires:       perl(Carp)
+Requires:       perlOpt(Carp)
 
 %description PathTools
 PathTools Perl module (Cwd, File::Spec).
@@ -1329,10 +1334,10 @@ Epoch:          1
 Version:        1.4414
 Requires:       %perl_compat
 BuildArch:      noarch
-Requires:       perl(CPAN::Meta::YAML) >= 0.002
-Requires:       perl(JSON::PP) >= 2.27103
+Requires:       perlOpt(CPAN::Meta::YAML) >= 0.002
+Requires:       perlOpt(JSON::PP) >= 2.27103
 # FIXME it could be removed now?
-Obsoletes:      perl-Parse-CPAN-Meta < 1.40
+Obsoletes:      perlOpt-Parse-CPAN-Meta < 1.40
 
 %description Parse-CPAN-Meta
 Parse::CPAN::Meta is a parser for META.yml files, based on the parser half of
@@ -1412,7 +1417,7 @@ License:        GPL+ or Artistic
 Epoch:          0
 Version:        3.23
 # Pod::Perldoc::ToMan executes roff
-Requires:       groff-base
+Requires:       groff
 Requires:       %perl_compat
 BuildArch:      noarch
 
@@ -1450,8 +1455,8 @@ Version:        1.63
 # BuildRequires:  perl-Pod-Perldoc
 Requires:       %perl_compat
 # Pod::Usage executes perldoc from perl-Pod-Perldoc by default
-Requires:       perl-Pod-Perldoc
-Requires:       perl(Pod::Text)
+Requires:       perlOpt-Pod-Perldoc
+Requires:       perlOpt(Pod::Text)
 BuildArch:      noarch
 
 %description Pod-Usage
@@ -1473,9 +1478,9 @@ Epoch:          0
 Version:        2.5.1
 BuildArch:      noarch
 Requires:       %perl_compat
-Requires:       perl(File::Spec) >= 0.8
-Requires:       perl(Pod::Simple) >= 3.06
-Conflicts:      perl < 4:5.16.1-234
+Requires:       perlOpt(File::Spec) >= 0.8
+Requires:       perlOpt(Pod::Simple) >= 3.06
+Conflicts:      perlOpt < 4:5.16.1-234
 
 %description podlators
 This package contains Pod::Man and Pod::Text modules which convert POD input
@@ -1509,12 +1514,12 @@ Epoch:          1
 Version:        2.49
 Requires:       %perl_compat
 # Carp substitutes missing Log::Agent
-Requires:       perl(Carp)
-Requires:       perl(Config)
+Requires:       perlOpt(Carp)
+Requires:       perlOpt(Config)
 # Fcntl is optional, but locking is good
-Requires:       perl(Fcntl)
-Requires:       perl(IO::File)
-Conflicts:      perl < 4:5.16.3-274
+Requires:       perlOpt(Fcntl)
+Requires:       perlOpt(IO::File)
+Conflicts:      perlOpt < 4:5.16.3-274
 
 %description Storable
 The Storable package brings persistence to your Perl data structures
@@ -1530,8 +1535,8 @@ License:        GPL+ or Artistic
 Epoch:          0
 Version:        0.33
 Requires:       %perl_compat
-Requires:       perl(XSLoader)
-Conflicts:      perl < 4:5.16.3-269
+Requires:       perlOpt(XSLoader)
+Conflicts:      perlOpt < 4:5.16.3-269
 
 %description Sys-Syslog
 Sys::Syslog is an interface to the UNIX syslog(3) function. Call syslog() with
@@ -1547,7 +1552,7 @@ Epoch:          0
 Version:        4.02
 Requires:       %perl_compat
 BuildArch:      noarch
-Conflicts:      perl < 4:5.18.2-302
+Conflicts:      perlOpt < 4:5.18.2-302
 
 %description Term-ANSIColor
 This module has two interfaces, one through color() and colored() and the
@@ -1579,7 +1584,7 @@ License:        GPL+ or Artistic
 Epoch:          0
 Version:        1.001002
 Requires:       %perl_compat
-Requires:       perl(Data::Dumper)
+Requires:       perlOpt(Data::Dumper)
 BuildArch:      noarch
 
 %description Test-Simple
@@ -1594,9 +1599,9 @@ License:        GPL+ or Artistic
 Epoch:          0
 Version:        3.29
 Requires:       %perl_compat
-Requires:       perl(Carp)
+Requires:       perlOpt(Carp)
 BuildArch:      noarch
-Conflicts:      perl < 4:5.16.2-256
+Conflicts:      perlOpt < 4:5.16.2-256
 
 %description Text-ParseWords
 Parse text into an array of tokens or array of arrays.
@@ -1611,9 +1616,9 @@ License:        GPL+ or Artistic
 Epoch:          0
 Version:        3.05
 Requires:       %perl_compat
-Requires:       perl(Carp)
+Requires:       perlOpt(Carp)
 BuildArch:      noarch
-Conflicts:      perl < 4:5.16.2-257
+Conflicts:      perlOpt < 4:5.16.2-257
 
 %description Thread-Queue
 This module provides thread-safe FIFO queues that can be accessed safely by
@@ -1628,8 +1633,8 @@ License:        GPL+ or Artistic
 Epoch:          0
 Version:        1.9726
 Requires:       %perl_compat
-Requires:       perl(Carp)
-Conflicts:      perl < 4:5.16.3-271
+Requires:       perlOpt(Carp)
+Conflicts:      perlOpt < 4:5.16.3-271
 
 %description Time-HiRes
 The Time::HiRes module implements a Perl interface to the usleep, nanosleep,
@@ -1646,7 +1651,7 @@ Epoch:          0
 Version:        1.2300
 Requires:       %perl_compat
 BuildArch:      noarch
-Conflicts:      perl < 4:5.16.3-262
+Conflicts:      perlOpt < 4:5.16.3-262
 
 %description Time-Local
 This module provides functions that are the inverse of built-in perl functions
@@ -1720,7 +1725,7 @@ Group:          Development/Libraries
 License:        GPL+ or Artistic
 Epoch:          1
 Version:        1.93
-Requires:       perl = %{perl_epoch}:%{perl_version}
+Requires:       perlOpt = %{perl_epoch}:%{perl_version}
 
 %description threads
 Since Perl 5.8, thread programming has been available using a model called
@@ -1779,39 +1784,39 @@ License:        GPL+ or Artistic
 Epoch:          0
 Version:        %{perl_version}
 Requires:       %perl_compat
-Requires:       perl-libs = %{perl_epoch}:%{perl_version}-%{release}
-Requires:       perl-devel = %{perl_epoch}:%{perl_version}-%{release}
-Requires:       perl-macros
+Requires:       perlOpt-libs = %{perl_epoch}:%{perl_version}-%{release}
+Requires:       perlOpt-devel = %{perl_epoch}:%{perl_version}-%{release}
+Requires:       perlOpt-macros
 
-Requires:       perl-App-a2p, perl-App-find2perl, perl-App-s2p
-Requires:       perl-Archive-Tar, perl-autodie, perl-Compress-Raw-Bzip2,
-Requires:       perl-Carp, perl-Compress-Raw-Zlib, perl-CGI, perl-constant,
-Requires:       perl-CPAN, perl-CPAN-Meta, perl-CPAN-Meta-Requirements,
-Requires:       perl-CPAN-Meta-YAML, perl-Encode
-Requires:       perl-Data-Dumper, perl-DB_File, perl-Digest, perl-Digest-MD5,
-Requires:       perl-Digest-SHA, perl-Env, perl-Exporter, perl-experimental
-Requires:       perl-ExtUtils-CBuilder, perl-ExtUtils-Embed,
-Requires:       perl-ExtUtils-Install, perl-ExtUtils-MakeMaker
-Requires:       perl-ExtUtils-Manifest, perl-ExtUtils-Miniperl
-Requires:       perl-ExtUtils-ParseXS, perl-File-Fetch
-Requires:       perl-File-Path, perl-File-Temp, perl-Filter, perl-Getopt-Long
-Requires:       perl-HTTP-Tiny, perl-IO-Compress, perl-IO-Socket-IP
-Requires:       perl-IO-Zlib, perl-IPC-Cmd, perl-JSON-PP
-Requires:       perl-Locale-Codes, perl-Locale-Maketext,
-Requires:       perl-Locale-Maketext-Simple
-Requires:       perl-Module-Build, perl-Module-CoreList, perl-Module-Load
-Requires:       perl-Module-Load-Conditional, perl-Module-Loaded, perl-Module-Metadata
-Requires:       perl-Package-Constants, perl-PathTools
-Requires:       perl-Params-Check, perl-Parse-CPAN-Meta, perl-Perl-OSType
-Requires:       perl-Pod-Checker, perl-Pod-Escapes
-Requires:       perl-Pod-Parser, perl-Pod-Perldoc, perl-Pod-Usage
-Requires:       perl-podlators, perl-Pod-Simple, perl-Scalar-List-Utils
-Requires:       perl-Socket, perl-Storable, perl-Sys-Syslog,
-Requires:       perl-Term-ANSIColor, perl-Test-Harness, perl-Test-Simple
-Requires:       perl-Text-ParseWords, perl-Thread-Queue
-Requires:       perl-Time-HiRes
-Requires:       perl-Time-Local, perl-Time-Piece
-Requires:       perl-version, perl-threads, perl-threads-shared, perl-parent
+Requires:       perlOpt-App-a2p, perlOpt-App-find2perl, perlOpt-App-s2p
+Requires:       perlOpt-Archive-Tar, perlOpt-autodie, perlOpt-Compress-Raw-Bzip2,
+Requires:       perlOpt-Carp, perlOpt-Compress-Raw-Zlib, perlOpt-CGI, perlOpt-constant,
+Requires:       perlOpt-CPAN, perlOpt-CPAN-Meta, perlOpt-CPAN-Meta-Requirements,
+Requires:       perlOpt-CPAN-Meta-YAML, perlOpt-Encode
+Requires:       perlOpt-Data-Dumper, perlOpt-DB_File, perlOpt-Digest, perlOpt-Digest-MD5,
+Requires:       perlOpt-Digest-SHA, perlOpt-Env, perlOpt-Exporter, perlOpt-experimental
+Requires:       perlOpt-ExtUtils-CBuilder, perlOpt-ExtUtils-Embed,
+Requires:       perlOpt-ExtUtils-Install, perlOpt-ExtUtils-MakeMaker
+Requires:       perlOpt-ExtUtils-Manifest, perlOpt-ExtUtils-Miniperl
+Requires:       perlOpt-ExtUtils-ParseXS, perlOpt-File-Fetch
+Requires:       perlOpt-File-Path, perlOpt-File-Temp, perlOpt-Filter, perlOpt-Getopt-Long
+Requires:       perlOpt-HTTP-Tiny, perlOpt-IO-Compress, perlOpt-IO-Socket-IP
+Requires:       perlOpt-IO-Zlib, perlOpt-IPC-Cmd, perlOpt-JSON-PP
+Requires:       perlOpt-Locale-Codes, perlOpt-Locale-Maketext,
+Requires:       perlOpt-Locale-Maketext-Simple
+Requires:       perlOpt-Module-Build, perlOpt-Module-CoreList, perlOpt-Module-Load
+Requires:       perlOpt-Module-Load-Conditional, perlOpt-Module-Loaded, perlOpt-Module-Metadata
+Requires:       perlOpt-Package-Constants, perlOpt-PathTools
+Requires:       perlOpt-Params-Check, perlOpt-Parse-CPAN-Meta, perlOpt-Perl-OSType
+Requires:       perlOpt-Pod-Checker, perlOpt-Pod-Escapes
+Requires:       perlOpt-Pod-Parser, perlOpt-Pod-Perldoc, perlOpt-Pod-Usage
+Requires:       perlOpt-podlators, perlOpt-Pod-Simple, perlOpt-Scalar-List-Utils
+Requires:       perlOpt-Socket, perlOpt-Storable, perlOpt-Sys-Syslog,
+Requires:       perlOpt-Term-ANSIColor, perlOpt-Test-Harness, perlOpt-Test-Simple
+Requires:       perlOpt-Text-ParseWords, perlOpt-Thread-Queue
+Requires:       perlOpt-Time-HiRes
+Requires:       perlOpt-Time-Local, perlOpt-Time-Piece
+Requires:       perlOpt-version, perlOpt-threads, perlOpt-threads-shared, perlOpt-parent
 
 %description core
 A metapackage which requires all of the perl bits and modules in the upstream
