@@ -1,7 +1,7 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-$script = <<SCRIPT
+$script_co6 = <<SCRIPT
 echo I am provisioning...
 sudo echo "6.5" > /etc/yum/vars/full_releasever
 sudo mv /home/vagrant/srpm.repo /etc/yum.repos.d/
@@ -16,7 +16,15 @@ VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # Every Vagrant virtual environment requires a box to build off of.
-  config.vm.box = "nrel/CentOS-6.5-i386"
+  config.vm.define :default do |co6|
+    co6.vm.box = "nrel/CentOS-6.5-i386"
+    co6.vm.provision "file", source: "srpm.repo", destination: "~/srpm.repo"
+    co6.vm.provision "shell", inline: $script_co6
+  end
+
+  config.vm.define :fedora20, autostart: false do |f20|
+    f20.vm.box = "chef/fedora-20-i386"
+  end
 
   # config.vm.box_check_update = false
   # config.vm.network "forwarded_port", guest: 80, host: 8080
@@ -28,8 +36,5 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     vb.gui = false
     # vb.customize ["modifyvm", :id, "--memory", "1024"]
   end
-
-  config.vm.provision "file", source: "srpm.repo", destination: "~/srpm.repo"
-  config.vm.provision "shell", inline: $script
 
 end
