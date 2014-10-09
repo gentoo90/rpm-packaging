@@ -1932,7 +1932,7 @@ echo "RPM Build arch: %{_arch}"
 perl regen.pl -v
 
 /bin/sh Configure -des -Doptimize="$RPM_OPT_FLAGS" \
-        -Dccdlflags="-Wl,--enable-new-dtags" \
+        -Dccdlflags="-Wl,--enable-new-dtags -Wl,-rpath=%{archlib}/CORE" \
         -Dlddlflags="-shared $RPM_OPT_FLAGS $RPM_LD_FLAGS" \
         -Dshrpdir="%{_libdir}" \
         -DDEBUGGING=-g \
@@ -2013,6 +2013,7 @@ ln -s "libperl.so.%{version}" "$RPM_BUILD_ROOT%{_libdir}/%{soname}"
 ln -s "libperl.so.%{version}" "$RPM_BUILD_ROOT%{_libdir}/libperl.so"
 # XXX: Keep symlink from original location because various code glues
 # $archlib/CORE/$libperl to get the DSO.
+ln -s "../../libperl.so.%{version}" "%{build_archlib}/CORE/%{soname}"
 ln -s "../../libperl.so.%{version}" "%{build_archlib}/CORE/libperl.so"
 
 install -p -m 755 utils/pl2pm %{build_bindir}/pl2pm
@@ -2135,7 +2136,7 @@ sed \
 
 
 # libs
-%exclude %{archlib}/CORE/libperl.so
+%exclude %{archlib}/CORE/libperl.so*
 %exclude %{_libdir}/libperl.so.*
 %exclude %{perl_vendorarch}
 
@@ -2722,7 +2723,7 @@ sed \
 
 %files libs
 %defattr(-,root,root)
-%{archlib}/CORE/libperl.so
+%{archlib}/CORE/libperl.so*
 %{_libdir}/libperl.so.*
 %dir %{archlib}
 %dir %{perl_vendorarch}
